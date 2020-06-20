@@ -205,6 +205,96 @@ static void MaxArmourSetter(v8::Local<v8::String> name, v8::Local<v8::Value> val
 	player->SetMaxArmour(value->ToInt32(isolate)->Value());
 }
 
+static void MoveSpeedGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+
+    V8ResourceImpl* resource = V8ResourceImpl::Get(isolate->GetEnteredContext());
+    V8_CHECK(resource, "invalid resource");
+
+    V8Entity* _this = V8Entity::Get(info.This());
+    V8_CHECK(_this, "entity is invalid");
+
+    Ref<IPlayer> player = _this->GetHandle().As<IPlayer>();
+
+    info.GetReturnValue().Set(v8::Number::New(isolate, player->GetMoveSpeed()));
+}
+
+static void DeadGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+
+    V8ResourceImpl* resource = V8ResourceImpl::Get(isolate->GetEnteredContext());
+    V8_CHECK(resource, "invalid resource");
+
+    V8Entity* _this = V8Entity::Get(info.This());
+    V8_CHECK(_this, "entity is invalid");
+
+    Ref<IPlayer> player = _this->GetHandle().As<IPlayer>();
+
+    info.GetReturnValue().Set(v8::Boolean::New(isolate, player->IsDead()));
+}
+
+static void JumpingGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+
+    V8ResourceImpl* resource = V8ResourceImpl::Get(isolate->GetEnteredContext());
+    V8_CHECK(resource, "invalid resource");
+
+    V8Entity* _this = V8Entity::Get(info.This());
+    V8_CHECK(_this, "entity is invalid");
+
+    Ref<IPlayer> player = _this->GetHandle().As<IPlayer>();
+
+    info.GetReturnValue().Set(v8::Boolean::New(isolate, player->IsJumping()));
+}
+
+static void RagdollGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+
+    V8ResourceImpl* resource = V8ResourceImpl::Get(isolate->GetEnteredContext());
+    V8_CHECK(resource, "invalid resource");
+
+    V8Entity* _this = V8Entity::Get(info.This());
+    V8_CHECK(_this, "entity is invalid");
+
+    Ref<IPlayer> player = _this->GetHandle().As<IPlayer>();
+
+    info.GetReturnValue().Set(v8::Boolean::New(isolate, player->IsInRagdoll()));
+}
+
+static void ShootingGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+
+    V8ResourceImpl* resource = V8ResourceImpl::Get(isolate->GetEnteredContext());
+    V8_CHECK(resource, "invalid resource");
+
+    V8Entity* _this = V8Entity::Get(info.This());
+    V8_CHECK(_this, "entity is invalid");
+
+    Ref<IPlayer> player = _this->GetHandle().As<IPlayer>();
+
+    info.GetReturnValue().Set(v8::Boolean::New(isolate, player->IsShooting()));
+}
+
+static void ReloadingGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+
+    V8ResourceImpl* resource = V8ResourceImpl::Get(isolate->GetEnteredContext());
+    V8_CHECK(resource, "invalid resource");
+
+    V8Entity* _this = V8Entity::Get(info.This());
+    V8_CHECK(_this, "entity is invalid");
+
+    Ref<IPlayer> player = _this->GetHandle().As<IPlayer>();
+
+    info.GetReturnValue().Set(v8::Boolean::New(isolate, player->IsReloading()));
+}
+
 static void CurrentWeaponGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	v8::Isolate* isolate = info.GetIsolate();
@@ -636,6 +726,13 @@ static V8Class v8Player("Player", "Entity", nullptr, [](v8::Local<v8::FunctionTe
 	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "maxHealth"), &MaxHealthGetter, &MaxHealthSetter);
 	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "armour"), &ArmourGetter, &ArmourSetter);
 	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "maxArmour"), &MaxArmourGetter, &MaxArmourSetter);
+	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "moveSpeed"), &MoveSpeedGetter);
+
+	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "dead"), &DeadGetter);
+	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "jumping"), &JumpingGetter);
+	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "ragdoll"), &RagdollGetter);
+	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "shooting"), &ShootingGetter);
+	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "reloading"), &ReloadingGetter);
 
 	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "entityAimingAt"), &EntityAimingAtGetter);
 	proto->SetAccessor(v8::String::NewFromUtf8(isolate, "entityAimOffset"), &EntityAimOffsetGetter);
